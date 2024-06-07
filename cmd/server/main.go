@@ -1,16 +1,19 @@
 package main
 
 import (
-	"fmt"
-	"net/http"
+	"log"
 	"wind-scale-server/internal/server"
 )
 
 func main() {
-	http.HandleFunc("/load", handlers.LoadHandler)
+	protocol := "http"
 
-	fmt.Println("Server is running on port 8080")
-	if err := http.ListenAndServe(":8080", nil); err != nil {
-		fmt.Printf("Server failed to start: %v\n", err)
+	srv, err := server.NewServer(protocol)
+	if err != nil {
+		log.Fatalf("Failed to create server: %v", err)
+	}
+
+	if err := srv.Start(); err != nil {
+		log.Fatalf("Server failed to start: %v", err)
 	}
 }
