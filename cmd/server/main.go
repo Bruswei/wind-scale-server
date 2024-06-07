@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"http-server-GO/internal/handlers"
 	"net/http"
+	"wind-scale-server/internal/server"
 )
 
 func main() {
