@@ -30,4 +30,5 @@ type Instant struct {
 
 type Details struct {
 	AirTemperature float64 `json:"air_temperature"`
+	WindSpeed      float64 `json:"wind_speed"`
 }

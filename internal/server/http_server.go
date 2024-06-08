@@ -14,8 +14,10 @@ type HTTPServer struct {
 
 func (h *HTTPServer) Start() error {
 	APIClient := &api.ExternalClient{}
-	windScaleAPIService := &service.WindScaleAPIService{
+	dPService := &service.DataService{}
+	windScaleAPIService := &service.WeatherDataService{
 		APIClient: APIClient,
+		DPService: dPService,
 	}
 	handler := &handlers.HTTPHandler{CoordinateService: windScaleAPIService}
 	// Repository instanilize
