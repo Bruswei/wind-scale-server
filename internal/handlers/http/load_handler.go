@@ -2,14 +2,17 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strconv"
+	"wind-scale-server/internal/service"
 )
 
 type HTTPHandler struct {
+	CoordinateService service.CoordinateService
 }
 
-func LoadHandler(w http.ResponseWriter, r *http.Request) {
+func (h *HTTPHandler) LoadHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
@@ -23,18 +26,24 @@ func LoadHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, err := strconv.ParseFloat(latPara, 64)
+	lat, err := strconv.ParseFloat(latPara, 64)
 	if err != nil {
 		http.Error(w, "Invalid latitude", http.StatusBadRequest)
 		return
 	}
 
-	_, err = strconv.ParseFloat(lonPara, 64)
+	lon, err := strconv.ParseFloat(lonPara, 64)
 	if err != nil {
 		http.Error(w, "Invalid latitude", http.StatusBadRequest)
 		return
 	}
 
+	ctx := r.Context()
+
+	data, err := h.CoordinateService.ProcessData(ctx, lat, lon)
+
+	fmt.Println("Data from loadHandler")
+	fmt.Println(data)
 	w.Header().Set("Content-type", "application/json")
 	json.NewEncoder(w).Encode("Ok")
 }
