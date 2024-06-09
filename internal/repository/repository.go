@@ -7,5 +7,5 @@ import (
 
 // Repository defines the interface for storing data
 type Repository interface {
-	StoreData(ctx context.Context, data []models.WindSpeedData) error
+	StoreData(ctx context.Context, data []models.WindSpeedRecord) error
 }
