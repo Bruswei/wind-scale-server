@@ -6,28 +6,25 @@ import (
 	"wind-scale-server/internal/models"
 )
 
-// ProcessedData represents the data to be stored in the CSV file
-type ProcessedData struct {
-	Location  string
-	Time      string
-	WindSpeed float64
-}
+// WindSpeedData represents the data to be stored in the CSV file
 
 type DataProcessingService interface {
-	ProcessData(apiResponse models.APIResponse, lat, lon float64) ([]ProcessedData, error)
-	StoreData(ctx context.Context, data []ProcessedData) error
+	ProcessData(apiResponse models.APIResponse, lat, lon float64) ([]models.WindSpeedData, error)
+	StoreData(ctx context.Context, data []models.WindSpeedData) error
 }
+
+// DataService is here but the interface should be moved out to its own file?
 
 type DataService struct {
 	// Repository Repository
 }
 
-func (s *DataService) ProcessData(apiResponse models.APIResponse, lat, lon float64) ([]ProcessedData, error) {
-	var processedData []ProcessedData
+func (s *DataService) ProcessData(apiResponse models.APIResponse, lat, lon float64) ([]models.WindSpeedData, error) {
+	var processedData []models.WindSpeedData
 	location := fmt.Sprintf("%f, %f", lat, lon)
 
 	for _, timeseries := range apiResponse.Properties.Timeseries {
-		data := ProcessedData{
+		data := models.WindSpeedData{
 			Location:  location,
 			Time:      timeseries.Time,
 			WindSpeed: timeseries.Data.Instant.Details.WindSpeed,
@@ -37,7 +34,7 @@ func (s *DataService) ProcessData(apiResponse models.APIResponse, lat, lon float
 	return processedData, nil
 }
 
-func (s *DataService) StoreData(ctx context.Context, data []ProcessedData) error {
+func (s *DataService) StoreData(ctx context.Context, data []models.WindSpeedData) error {
 	// return s.Repository.StoreData(ctx, data)
 	return nil
 }
