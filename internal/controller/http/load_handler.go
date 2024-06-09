@@ -9,7 +9,7 @@ import (
 )
 
 type HTTPHandler struct {
-	CoordinateService service.CoordinateService
+	WindSpeedService service.WindSpeedGetter
 }
 
 func (h *HTTPHandler) LoadHandler(w http.ResponseWriter, r *http.Request) {
@@ -40,7 +40,7 @@ func (h *HTTPHandler) LoadHandler(w http.ResponseWriter, r *http.Request) {
 
 	ctx := r.Context()
 
-	data, err := h.CoordinateService.ProcessData(ctx, lat, lon)
+	data, err := h.WindSpeedService.ProcessData(ctx, lat, lon)
 
 	fmt.Println(data)
 

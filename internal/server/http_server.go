@@ -4,25 +4,29 @@ import (
 	"fmt"
 	"net/http"
 	handlers "wind-scale-server/internal/controller/http"
-	"wind-scale-server/internal/provider/met"
 	"wind-scale-server/internal/windspeed/service"
 )
 
+type Server interface {
+	Start() error
+}
+
 type HTTPServer struct {
-	Port string
+	Port             string
+	windSpeedService service.WindSpeedGetter
 }
 
 func (h *HTTPServer) Start() error {
-	APIClient := &met.ExternalClient{}
-	dPService := &met.DataService{}
-	windScaleAPIService := &service.WeatherDataService{
-		APIClient: APIClient,
-		DPService: dPService,
-	}
-	handler := &handlers.HTTPHandler{CoordinateService: windScaleAPIService}
-	// Repository instanilize
+	handler := &handlers.HTTPHandler{WindSpeedService: h.windSpeedService}
 	http.HandleFunc("/load", handler.LoadHandler)
 	fmt.Println("Server is running on port ", h.Port)
 
 	return http.ListenAndServe(":"+h.Port, nil)
+}
+
+func NewServer(port string, windSpeedService *service.WindSpeedService) *HTTPServer {
+	return &HTTPServer{
+		Port:             port,
+		windSpeedService: windSpeedService,
+	}
 }

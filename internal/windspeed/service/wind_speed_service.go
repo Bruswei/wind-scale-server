@@ -6,12 +6,12 @@ import (
 	"wind-scale-server/internal/provider/met"
 )
 
-type WeatherDataService struct {
+type WindSpeedService struct {
 	APIClient met.Client
 	DPService met.DataProcessingService
 }
 
-func (s *WeatherDataService) ProcessData(ctx context.Context, lat, lon float64) (interface{}, error) {
+func (s *WindSpeedService) ProcessData(ctx context.Context, lat, lon float64) (interface{}, error) {
 	rawData, err := s.APIClient.FetchData(ctx, lat, lon)
 	if err != nil {
 		return nil, err
