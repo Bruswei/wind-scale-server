@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
-	"wind-scale-server/internal/service"
+	"wind-scale-server/internal/windspeed/service"
 )
 
 type HTTPHandler struct {
@@ -42,8 +42,8 @@ func (h *HTTPHandler) LoadHandler(w http.ResponseWriter, r *http.Request) {
 
 	data, err := h.CoordinateService.ProcessData(ctx, lat, lon)
 
-	fmt.Println("Data from loadHandler")
 	fmt.Println(data)
+
 	w.Header().Set("Content-type", "application/json")
 	json.NewEncoder(w).Encode("Ok")
 }

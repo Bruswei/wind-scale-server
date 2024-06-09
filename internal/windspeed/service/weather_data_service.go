@@ -3,13 +3,12 @@ package service
 import (
 	"context"
 	"fmt"
-	"wind-scale-server/internal/api"
-	"wind-scale-server/internal/models"
+	"wind-scale-server/internal/provider/met"
 )
 
 type WeatherDataService struct {
-	APIClient api.Client
-	DPService DataProcessingService
+	APIClient met.Client
+	DPService met.DataProcessingService
 }
 
 func (s *WeatherDataService) ProcessData(ctx context.Context, lat, lon float64) (interface{}, error) {
@@ -18,7 +17,7 @@ func (s *WeatherDataService) ProcessData(ctx context.Context, lat, lon float64) 
 		return nil, err
 	}
 
-	apiResponse, ok := rawData.(models.APIResponse)
+	apiResponse, ok := rawData.(met.APIResponse)
 	if !ok {
 		return nil, fmt.Errorf("invalid data format")
 	}

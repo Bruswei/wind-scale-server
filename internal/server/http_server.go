@@ -3,9 +3,9 @@ package server
 import (
 	"fmt"
 	"net/http"
-	"wind-scale-server/internal/api"
-	handlers "wind-scale-server/internal/handlers/http"
-	"wind-scale-server/internal/service"
+	handlers "wind-scale-server/internal/controller/http"
+	"wind-scale-server/internal/provider/met"
+	"wind-scale-server/internal/windspeed/service"
 )
 
 type HTTPServer struct {
@@ -13,8 +13,8 @@ type HTTPServer struct {
 }
 
 func (h *HTTPServer) Start() error {
-	APIClient := &api.ExternalClient{}
-	dPService := &service.DataService{}
+	APIClient := &met.ExternalClient{}
+	dPService := &met.DataService{}
 	windScaleAPIService := &service.WeatherDataService{
 		APIClient: APIClient,
 		DPService: dPService,
