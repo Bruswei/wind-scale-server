@@ -1,4 +1,4 @@
-package models
+package met
 
 type APIResponse struct {
 	Type       string     `json:"type"`

@@ -1,14 +1,17 @@
-package api
+package met
 
 import (
 	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"wind-scale-server/internal/models"
 )
 
 const BaseURL = "https://api.met.no/weatherapi/locationforecast/2.0/compact"
+
+type Client interface {
+	FetchData(ctx context.Context, lat, lon float64) (interface{}, error)
+}
 
 type ExternalClient struct{}
 
@@ -32,7 +35,7 @@ func (c *ExternalClient) FetchData(ctx context.Context, lat, lon float64) (inter
 		return nil, fmt.Errorf("failed to fetch data: %s", response.Status)
 	}
 
-	var apiResponse models.APIResponse
+	var apiResponse APIResponse
 	if err := json.NewDecoder(response.Body).Decode((&apiResponse)); err != nil {
 		return nil, err
 	}
