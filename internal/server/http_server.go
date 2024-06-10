@@ -3,7 +3,7 @@ package server
 import (
 	"fmt"
 	"net/http"
-	handlers "wind-scale-server/internal/controller/http"
+	"wind-scale-server/internal/controller"
 	"wind-scale-server/internal/windspeed/service"
 )
 
@@ -17,10 +17,21 @@ type HTTPServer struct {
 }
 
 func (h *HTTPServer) Start() error {
-	handler := &handlers.HTTPHandler{WindSpeedService: h.windSpeedService}
-	http.HandleFunc("/load", handler.LoadHandler)
-	fmt.Println("Server is running on port ", h.Port)
 
+	var ctrl controller.Controller = &controller.HTTPController{
+		WindSpeedService: h.windSpeedService,
+	}
+
+	http.HandleFunc("/load", func(w http.ResponseWriter, r *http.Request) {
+		req := &controller.HTTPRequest{Request: r}
+		res := &controller.HTTPResponse{ResponseWriter: w}
+		err := ctrl.HandleWindSpeedLoad(req, res)
+		if err != nil {
+			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		}
+	})
+
+	fmt.Println("Server is running on port ", h.Port)
 	return http.ListenAndServe(":"+h.Port, nil)
 }
 

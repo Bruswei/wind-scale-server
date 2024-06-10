@@ -1,7 +1,20 @@
-package handlers
+package controller
 
-import "context"
+import (
+	"context"
+)
 
-type controller interface {
-	LoadCoordinates(ctx context.Context, lat, lon float64) (interface{}, error)
+type Request interface {
+	Context() context.Context
+	Param(name string) string
+	Method() string
+}
+
+type Response interface {
+	SetHeader(name, value string)
+	Write(statusCode int, body interface{}) error
+}
+
+type Controller interface {
+	HandleWindSpeedLoad(req Request, res Response) error
 }
