@@ -22,9 +22,9 @@ func main() {
 
 func initiateAndRunHTTP(port string) {
 
-	APIClient := &met.ExternalClient{}
-	dPService := &met.DataService{}
-	windSpeedService := &service.WindSpeedService{
+	var APIClient met.Client = &met.ExternalClient{}
+	var dPService met.DataProcessingService = &met.DataService{}
+	var windSpeedService service.WindSpeedGetter = &service.WindSpeedService{
 		APIClient: APIClient,
 		DPService: dPService,
 	}

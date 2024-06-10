@@ -9,6 +9,10 @@ import (
 
 const BaseURL = "https://api.met.no/weatherapi/locationforecast/2.0/compact"
 
+type Client interface {
+	FetchData(ctx context.Context, lat, lon float64) (interface{}, error)
+}
+
 type ExternalClient struct{}
 
 func (c *ExternalClient) FetchData(ctx context.Context, lat, lon float64) (interface{}, error) {

@@ -35,7 +35,7 @@ func (h *HTTPServer) Start() error {
 	return http.ListenAndServe(":"+h.Port, nil)
 }
 
-func NewServer(port string, windSpeedService *service.WindSpeedService) *HTTPServer {
+func NewServer(port string, windSpeedService service.WindSpeedGetter) *HTTPServer {
 	return &HTTPServer{
 		Port:             port,
 		windSpeedService: windSpeedService,
