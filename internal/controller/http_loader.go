@@ -76,6 +76,10 @@ func (h *HTTPController) HandleWindSpeedLoad(req Request, res Response) error {
 	}
 
 	err = h.WindSpeedService.StoreWindSpeedData(data)
+	if err != nil {
+		res.Write(http.StatusInternalServerError, map[string]string{"error": "Failed to store wind speed data"})
+		return nil
+	}
 
 	res.SetHeader("Content-type", "application/json")
 	res.Write(http.StatusOK, map[string]string{"message": "ok"})
