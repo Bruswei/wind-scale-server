@@ -2,20 +2,22 @@ package main
 
 import (
 	"log"
+	"wind-scale-server/internal/config"
 	"wind-scale-server/internal/provider/met"
 	"wind-scale-server/internal/server"
 	"wind-scale-server/internal/windspeed/service"
 )
 
 func main() {
+	config := config.GetConfig()
+
 	protocol := "http"
 
 	switch protocol {
 	case "gRPC":
 		panic("gRPC not implemented")
 	default:
-		port := "8080"
-		initiateAndRunHTTP(port)
+		initiateAndRunHTTP(config.ListenPort)
 	}
 
 }
