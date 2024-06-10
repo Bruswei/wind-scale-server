@@ -3,7 +3,6 @@ package controller
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"strconv"
 	"wind-scale-server/internal/windspeed"
@@ -70,13 +69,13 @@ func (h *HTTPController) HandleWindSpeedLoad(req Request, res Response) error {
 
 	ctx := req.Context()
 
-	data, err := h.WindSpeedService.ProcessData(ctx, lat, lon)
+	data, err := h.WindSpeedService.FetchWindSpeedData(ctx, lat, lon)
 	if err != nil {
 		res.Write(http.StatusInternalServerError, map[string]string{"error": "Failed to process data"})
 		return nil
 	}
 
-	fmt.Println(data)
+	err = h.WindSpeedService.StoreWindSpeedData(data)
 
 	res.SetHeader("Content-type", "application/json")
 	res.Write(http.StatusOK, map[string]string{"message": "ok"})

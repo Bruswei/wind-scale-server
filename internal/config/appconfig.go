@@ -7,7 +7,7 @@ type AppConfig struct {
 
 func GetConfig() AppConfig {
 	return AppConfig{
-		CSVFilePath: "wind-scale-server/internal/csv/wind-speed.csv",
+		CSVFilePath: "internal/csvdata/wind-speed.csv",
 		ListenPort:  "8080",
 	}
 }

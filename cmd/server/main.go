@@ -23,16 +23,18 @@ func main() {
 	case "gRPC":
 		panic("gRPC not implemented")
 	default:
-		initiateAndRunHTTP(config.ListenPort)
+		initiateAndRunHTTP(config.ListenPort, config.CSVFilePath)
 	}
 
 }
 
-func initiateAndRunHTTP(port string) {
+func initiateAndRunHTTP(port string, filePath string) {
 
 	var APIClient windspeed.Client = &met.ExternalClient{}
+	var CSVStore windspeed.DataStorer = csvdata.NewCSVStore(filePath)
 	var windSpeedService windspeed.WindSpeedGetter = &windspeed.WindSpeedService{
 		APIClient: APIClient,
+		DataStore: CSVStore,
 	}
 
 	var srv server.Server = server.NewServer(port, windSpeedService)

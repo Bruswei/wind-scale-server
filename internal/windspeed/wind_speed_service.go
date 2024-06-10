@@ -6,13 +6,18 @@ import (
 
 type WindSpeedService struct {
 	APIClient Client
+	DataStore DataStorer
 }
 
-func (s *WindSpeedService) ProcessData(ctx context.Context, lat, lon float64) (interface{}, error) {
-	processedData, err := s.APIClient.FetchData(ctx, lat, lon)
+func (s *WindSpeedService) FetchWindSpeedData(ctx context.Context, lat, lon float64) (WindSpeedRecord, error) {
+	wsr, err := s.APIClient.FetchData(ctx, lat, lon)
 	if err != nil {
-		return nil, err
+		return WindSpeedRecord{}, err
 	}
 
-	return processedData, nil
+	return wsr, nil
+}
+
+func (s *WindSpeedService) StoreWindSpeedData(record WindSpeedRecord) error {
+	return s.DataStore.StoreData(record)
 }
