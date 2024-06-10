@@ -6,13 +6,10 @@ import (
 )
 
 // WindSpeedData represents the data to be stored in the CSV file
-
 type DataProcessingService interface {
 	ProcessData(apiResponse APIResponse, lat, lon float64) ([]models.WindSpeedRecord, error)
 	// StoreData(ctx context.Context, data []models.WindSpeedRecord) error
 }
-
-// DataService is here but the interface should be moved out to its own file?
 
 type DataService struct {
 	// Repository Repository

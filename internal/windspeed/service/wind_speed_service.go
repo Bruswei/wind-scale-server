@@ -6,6 +6,10 @@ import (
 	"wind-scale-server/internal/provider/met"
 )
 
+type WindSpeedGetter interface {
+	ProcessData(ctx context.Context, lat, lon float64) (interface{}, error)
+}
+
 type WindSpeedService struct {
 	APIClient met.Client
 	DPService met.DataProcessingService
