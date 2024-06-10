@@ -5,18 +5,15 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"wind-scale-server/internal/windspeed"
 )
 
 const BaseURL = "https://api.met.no/weatherapi/locationforecast/2.0/compact"
 
-type Client interface {
-	FetchData(ctx context.Context, lat, lon float64) (interface{}, error)
-}
-
 type ExternalClient struct{}
 
-func (c *ExternalClient) FetchData(ctx context.Context, lat, lon float64) (interface{}, error) {
-	url := fmt.Sprintf("%s?lat=%f&lon=%f", BaseURL, lat, lon)
+func (c *ExternalClient) FetchData(ctx context.Context, lat, lng float64) ([]windspeed.WindSpeedRecord, error) {
+	url := fmt.Sprintf("%s?lat=%f&lon=%f", BaseURL, lat, lng)
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
 		return nil, err
@@ -40,5 +37,20 @@ func (c *ExternalClient) FetchData(ctx context.Context, lat, lon float64) (inter
 		return nil, err
 	}
 
-	return apiResponse, nil
+	return c.ProcessData(apiResponse, lat, lng)
+}
+
+func (c *ExternalClient) ProcessData(apiResponse APIResponse, lat, lon float64) ([]windspeed.WindSpeedRecord, error) {
+	var processedData []windspeed.WindSpeedRecord
+	location := fmt.Sprintf("%f, %f", lat, lon)
+
+	for _, timeseries := range apiResponse.Properties.Timeseries {
+		data := windspeed.WindSpeedRecord{
+			Location:  location,
+			Time:      timeseries.Time,
+			WindSpeed: timeseries.Data.Instant.Details.WindSpeed,
+		}
+		processedData = append(processedData, data)
+	}
+	return processedData, nil
 }
