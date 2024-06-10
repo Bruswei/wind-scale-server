@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
-	"wind-scale-server/internal/windspeed/service"
+	"wind-scale-server/internal/windspeed"
 )
 
 type HTTPRequest struct {
@@ -39,7 +39,7 @@ func (r *HTTPResponse) Write(statusCode int, body interface{}) error {
 }
 
 type HTTPController struct {
-	WindSpeedService service.WindSpeedGetter
+	WindSpeedService windspeed.WindSpeedGetter
 }
 
 func (h *HTTPController) HandleWindSpeedLoad(req Request, res Response) error {

@@ -5,7 +5,7 @@ import (
 	"wind-scale-server/internal/config"
 	"wind-scale-server/internal/provider/met"
 	"wind-scale-server/internal/server"
-	"wind-scale-server/internal/windspeed/service"
+	"wind-scale-server/internal/windspeed"
 )
 
 func main() {
@@ -24,11 +24,9 @@ func main() {
 
 func initiateAndRunHTTP(port string) {
 
-	var APIClient met.Client = &met.ExternalClient{}
-	var dPService met.DataProcessingService = &met.DataService{}
-	var windSpeedService service.WindSpeedGetter = &service.WindSpeedService{
+	var APIClient windspeed.Client = &met.ExternalClient{}
+	var windSpeedService windspeed.WindSpeedGetter = &windspeed.WindSpeedService{
 		APIClient: APIClient,
-		DPService: dPService,
 	}
 
 	var srv server.Server = server.NewServer(port, windSpeedService)
