@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"wind-scale-server/internal/config"
+	"wind-scale-server/internal/csvdata"
 	"wind-scale-server/internal/provider/met"
 	"wind-scale-server/internal/server"
 	"wind-scale-server/internal/windspeed"
@@ -10,6 +11,11 @@ import (
 
 func main() {
 	config := config.GetConfig()
+
+	// Ensure CSV file exists
+	if err := csvdata.FileExists(config.CSVFilePath); err != nil {
+		log.Fatalf("Failed to ensure CSV file exists: %v", err)
+	}
 
 	protocol := "http"
 
