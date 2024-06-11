@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"time"
 	"wind-scale-server/internal/windspeed"
 )
 
@@ -12,7 +13,7 @@ const BaseURL = "https://api.met.no/weatherapi/locationforecast/2.0/compact"
 
 type ExternalClient struct{}
 
-func (c *ExternalClient) FetchData(ctx context.Context, lat, lng float64) (windspeed.WindSpeedRecord, error) {
+func (c *ExternalClient) FetchCurrentWindSpeedData(ctx context.Context, lat, lng float64) (windspeed.WindSpeedRecord, error) {
 	url := fmt.Sprintf("%s?lat=%f&lon=%f", BaseURL, lat, lng)
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
@@ -37,21 +38,44 @@ func (c *ExternalClient) FetchData(ctx context.Context, lat, lng float64) (winds
 		return windspeed.WindSpeedRecord{}, err
 	}
 
-	return c.getInstantWindSpeed(apiResponse, lat, lng)
+	return c.findClosestTimeSeries(apiResponse, lat, lng)
 }
 
-func (c *ExternalClient) getInstantWindSpeed(apiResponse APIResponse, lat, lon float64) (windspeed.WindSpeedRecord, error) {
+func (c *ExternalClient) findClosestTimeSeries(apiResponse APIResponse, lat, lon float64) (windspeed.WindSpeedRecord, error) {
 	if len(apiResponse.Properties.Timeseries) == 0 {
 		return windspeed.WindSpeedRecord{}, fmt.Errorf("no timeseries data available")
 	}
 
 	location := fmt.Sprintf("%f, %f", lat, lon)
-	timeseries := apiResponse.Properties.Timeseries[0]
+	currentTime := time.Now()
+	var closestTimeSeries Timeseries
+	minDiff := time.Duration(1<<63 - 1)
+
+	for _, ts := range apiResponse.Properties.Timeseries {
+		tsTime, err := time.Parse(time.RFC3339, ts.Time)
+		if err != nil {
+			continue
+		}
+
+		diff := currentTime.Sub(tsTime)
+		if diff < 0 {
+			diff = -diff
+		}
+
+		if diff < minDiff {
+			minDiff = diff
+			closestTimeSeries = ts
+		}
+	}
+
+	if closestTimeSeries.Time == "" {
+		return windspeed.WindSpeedRecord{}, fmt.Errorf("no valid timeseries data found")
+	}
 
 	record := windspeed.WindSpeedRecord{
 		Location:  location,
-		Time:      timeseries.Time,
-		WindSpeed: timeseries.Data.Instant.Details.WindSpeed,
+		Time:      closestTimeSeries.Time,
+		WindSpeed: closestTimeSeries.Data.Instant.Details.WindSpeed,
 	}
 
 	return record, nil

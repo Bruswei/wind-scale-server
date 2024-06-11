@@ -3,7 +3,7 @@ package windspeed
 import "context"
 
 type Client interface {
-	FetchData(ctx context.Context, lat, lon float64) (WindSpeedRecord, error)
+	FetchCurrentWindSpeedData(ctx context.Context, lat, lon float64) (WindSpeedRecord, error)
 }
 
 type WindSpeedServiceInterface interface {
