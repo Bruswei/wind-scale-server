@@ -56,14 +56,14 @@ func (h *HTTPController) HandleWindSpeedLoad(req Request, res Response) error {
 	}
 
 	lat, err := strconv.ParseFloat(latPara, 64)
-	if err != nil {
-		res.Write(http.StatusBadRequest, map[string]string{"error": "Missing lat and/or lon parameters"})
+	if err != nil || lat < -90 || lat > 90 {
+		res.Write(http.StatusBadRequest, map[string]string{"error": "Invalid latitude"})
 		return nil
 	}
 
 	lon, err := strconv.ParseFloat(lngPara, 64)
-	if err != nil {
-		res.Write(http.StatusBadRequest, map[string]string{"error": "Invalid latitude"})
+	if err != nil || lon < -180 || lon > 180 {
+		res.Write(http.StatusBadRequest, map[string]string{"error": "Invalid longitude"})
 		return nil
 	}
 
