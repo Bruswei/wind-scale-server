@@ -23,7 +23,7 @@ func (s *WindSpeedService) FetchWindSpeedData(ctx context.Context, lat, lon floa
 }
 
 func (s *WindSpeedService) StoreWindSpeedData(record WindSpeedRecord) error {
-	return s.DataStore.StoreData(record)
+	return s.DataStore.Create(record)
 }
 
 func (s *WindSpeedService) FetchAndStoreWindSpeedData(ctx context.Context, lat, lon float64) (WindSpeedRecord, error) {
