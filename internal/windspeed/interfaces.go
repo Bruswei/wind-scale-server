@@ -13,5 +13,8 @@ type WindSpeedServiceInterface interface {
 }
 
 type DataStorer interface {
-	StoreData(WindSpeedRecord) error
+	Create(WindSpeedRecord) error
+	Read() ([]WindSpeedRecord, error)
+	Update(WindSpeedRecord) error
+	Delete(WindSpeedRecord) error
 }

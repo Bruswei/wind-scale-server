@@ -21,13 +21,24 @@ func (m *MockClient) FetchCurrentWindSpeedData(ctx context.Context, lat, lon flo
 }
 
 type MockDataStorer struct {
-	StoredData windspeed.WindSpeedRecord
-	Error      error
+	StoredRecords []windspeed.WindSpeedRecord
+	Error         error
 }
 
-func (m *MockDataStorer) StoreData(record windspeed.WindSpeedRecord) error {
-	m.StoredData = record
+func (m *MockDataStorer) Create(record windspeed.WindSpeedRecord) error {
+	m.StoredRecords = append(m.StoredRecords, record)
 	return m.Error
+}
+func (m *MockDataStorer) Read() ([]windspeed.WindSpeedRecord, error) {
+	return m.StoredRecords, nil
+}
+
+func (m *MockDataStorer) Update(record windspeed.WindSpeedRecord) error {
+	return nil
+}
+
+func (m *MockDataStorer) Delete(record windspeed.WindSpeedRecord) error {
+	return nil
 }
 func TestFetchAndStoreWindSpeedData(t *testing.T) {
 	mockClient := &MockClient{}
@@ -44,7 +55,7 @@ func TestFetchAndStoreWindSpeedData(t *testing.T) {
 	record, err := windSpeedService.FetchAndStoreWindSpeedData(ctx, lat, lon)
 	assert.NoError(t, err)
 	assert.Equal(t, "10.000000, 20.000000", record.Location)
-	assert.Equal(t, mockDataStorer.StoredData, record)
+	assert.Contains(t, mockDataStorer.StoredRecords, record)
 }
 
 func TestFetchAndStoreWindSpeedData_InvalidLat(t *testing.T) {
@@ -95,5 +106,5 @@ func TestStoreWindSpeedData(t *testing.T) {
 
 	err := windSpeedService.StoreWindSpeedData(record)
 	assert.NoError(t, err)
-	assert.Equal(t, mockDataStorer.StoredData, record)
+	assert.Contains(t, mockDataStorer.StoredRecords, record)
 }
