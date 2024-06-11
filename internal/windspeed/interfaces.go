@@ -9,6 +9,7 @@ type Client interface {
 type WindSpeedServiceInterface interface {
 	FetchWindSpeedData(ctx context.Context, lat, lon float64) (WindSpeedRecord, error)
 	StoreWindSpeedData(record WindSpeedRecord) error
+	FetchAndStoreWindSpeedData(ctx context.Context, lat, lon float64) (WindSpeedRecord, error)
 }
 
 type DataStorer interface {
