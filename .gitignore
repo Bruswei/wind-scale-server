@@ -22,4 +22,4 @@ go.work
 go.work.sum
 
 # CSV file that does not need to be stored
-*.csv
+internal/csvdata/wind-speed.csv
