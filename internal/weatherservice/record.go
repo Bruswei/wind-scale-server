@@ -1,4 +1,4 @@
-package windspeed
+package weatherservice
 
 type WindSpeedRecord struct {
 	Location  string

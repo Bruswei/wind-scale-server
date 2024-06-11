@@ -6,7 +6,7 @@ import (
 	"wind-scale-server/internal/csvdata"
 	"wind-scale-server/internal/provider/met"
 	"wind-scale-server/internal/server"
-	"wind-scale-server/internal/windspeed"
+	"wind-scale-server/internal/weatherservice"
 )
 
 func main() {
@@ -30,9 +30,9 @@ func main() {
 
 func initiateAndRunHTTP(port string, filePath string) {
 
-	var APIClient windspeed.Client = &met.ExternalClient{}
-	var CSVStore windspeed.DataStorer = csvdata.NewCSVStore(filePath)
-	var windSpeedService windspeed.WindSpeedServiceInterface = &windspeed.WindSpeedService{
+	var APIClient weatherservice.Client = &met.ExternalClient{}
+	var CSVStore weatherservice.DataStorer = csvdata.NewCSVStore(filePath)
+	var windSpeedService weatherservice.WeatherServiceInterface = &weatherservice.WeatherService{
 		APIClient: APIClient,
 		DataStore: CSVStore,
 	}

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"wind-scale-server/internal/controller"
-	"wind-scale-server/internal/windspeed"
+	"wind-scale-server/internal/weatherservice"
 )
 
 type Server interface {
@@ -12,14 +12,14 @@ type Server interface {
 }
 
 type HTTPServer struct {
-	Port             string
-	windSpeedService windspeed.WindSpeedServiceInterface
+	Port           string
+	WeatherService weatherservice.WeatherServiceInterface
 }
 
 func (h *HTTPServer) Start() error {
 
 	var ctrl controller.Controller = &controller.HTTPController{
-		WindSpeedService: h.windSpeedService,
+		WeatherService: h.WeatherService,
 	}
 
 	http.HandleFunc("/load", func(w http.ResponseWriter, r *http.Request) {
@@ -35,9 +35,9 @@ func (h *HTTPServer) Start() error {
 	return http.ListenAndServe(":"+h.Port, nil)
 }
 
-func NewServer(port string, windSpeedService windspeed.WindSpeedServiceInterface) *HTTPServer {
+func NewServer(port string, ws weatherservice.WeatherServiceInterface) *HTTPServer {
 	return &HTTPServer{
-		Port:             port,
-		windSpeedService: windSpeedService,
+		Port:           port,
+		WeatherService: ws,
 	}
 }
