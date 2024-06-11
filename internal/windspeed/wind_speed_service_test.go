@@ -12,7 +12,7 @@ import (
 
 type MockClient struct{}
 
-func (m *MockClient) FetchData(ctx context.Context, lat, lon float64) (windspeed.WindSpeedRecord, error) {
+func (m *MockClient) FetchCurrentWindSpeedData(ctx context.Context, lat, lon float64) (windspeed.WindSpeedRecord, error) {
 	return windspeed.WindSpeedRecord{
 		Location:  fmt.Sprintf("%f, %f", lat, lon),
 		WindSpeed: 5.5,

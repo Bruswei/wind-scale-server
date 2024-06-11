@@ -14,7 +14,7 @@ func (s *WindSpeedService) FetchWindSpeedData(ctx context.Context, lat, lon floa
 	if !isValidLatLon(lat, lon) {
 		return WindSpeedRecord{}, fmt.Errorf("invalid latitude or longitude")
 	}
-	wsr, err := s.APIClient.FetchData(ctx, lat, lon)
+	wsr, err := s.APIClient.FetchCurrentWindSpeedData(ctx, lat, lon)
 	if err != nil {
 		return WindSpeedRecord{}, err
 	}
