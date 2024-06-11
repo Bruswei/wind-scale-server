@@ -6,18 +6,18 @@ import (
 	"fmt"
 	"net/http"
 	"time"
-	"wind-scale-server/internal/windspeed"
+	"wind-scale-server/internal/weatherservice"
 )
 
 const BaseURL = "https://api.met.no/weatherapi/locationforecast/2.0/compact"
 
 type ExternalClient struct{}
 
-func (c *ExternalClient) FetchCurrentWindSpeedData(ctx context.Context, lat, lng float64) (windspeed.WindSpeedRecord, error) {
+func (c *ExternalClient) FetchCurrentWindSpeedData(ctx context.Context, lat, lng float64) (weatherservice.WindSpeedRecord, error) {
 	url := fmt.Sprintf("%s?lat=%f&lon=%f", BaseURL, lat, lng)
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
-		return windspeed.WindSpeedRecord{}, err
+		return weatherservice.WindSpeedRecord{}, err
 	}
 
 	req.Header.Set("User-Agent", "Mozilla/5.0 (compatible; WindScaleApp/1.0)")
@@ -25,25 +25,25 @@ func (c *ExternalClient) FetchCurrentWindSpeedData(ctx context.Context, lat, lng
 
 	response, err := http.DefaultClient.Do(req)
 	if err != nil {
-		return windspeed.WindSpeedRecord{}, err
+		return weatherservice.WindSpeedRecord{}, err
 	}
 	defer response.Body.Close()
 
 	if response.StatusCode != http.StatusOK {
-		return windspeed.WindSpeedRecord{}, fmt.Errorf("failed to fetch data: %s", response.Status)
+		return weatherservice.WindSpeedRecord{}, fmt.Errorf("failed to fetch data: %s", response.Status)
 	}
 
 	var apiResponse APIResponse
 	if err := json.NewDecoder(response.Body).Decode((&apiResponse)); err != nil {
-		return windspeed.WindSpeedRecord{}, err
+		return weatherservice.WindSpeedRecord{}, err
 	}
 
 	return c.findClosestTimeSeries(apiResponse, lat, lng)
 }
 
-func (c *ExternalClient) findClosestTimeSeries(apiResponse APIResponse, lat, lon float64) (windspeed.WindSpeedRecord, error) {
+func (c *ExternalClient) findClosestTimeSeries(apiResponse APIResponse, lat, lon float64) (weatherservice.WindSpeedRecord, error) {
 	if len(apiResponse.Properties.Timeseries) == 0 {
-		return windspeed.WindSpeedRecord{}, fmt.Errorf("no timeseries data available")
+		return weatherservice.WindSpeedRecord{}, fmt.Errorf("no timeseries data available")
 	}
 
 	location := fmt.Sprintf("%f, %f", lat, lon)
@@ -69,10 +69,10 @@ func (c *ExternalClient) findClosestTimeSeries(apiResponse APIResponse, lat, lon
 	}
 
 	if closestTimeSeries.Time == "" {
-		return windspeed.WindSpeedRecord{}, fmt.Errorf("no valid timeseries data found")
+		return weatherservice.WindSpeedRecord{}, fmt.Errorf("no valid timeseries data found")
 	}
 
-	record := windspeed.WindSpeedRecord{
+	record := weatherservice.WindSpeedRecord{
 		Location:  location,
 		Time:      closestTimeSeries.Time,
 		WindSpeed: closestTimeSeries.Data.Instant.Details.WindSpeed,

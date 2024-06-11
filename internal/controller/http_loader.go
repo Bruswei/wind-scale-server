@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"strconv"
-	"wind-scale-server/internal/windspeed"
+	"wind-scale-server/internal/weatherservice"
 )
 
 type HTTPRequest struct {
@@ -38,7 +38,7 @@ func (r *HTTPResponse) Write(statusCode int, body interface{}) error {
 }
 
 type HTTPController struct {
-	WindSpeedService windspeed.WindSpeedServiceInterface
+	WeatherService weatherservice.WeatherServiceInterface
 }
 
 func (h *HTTPController) HandleWindSpeedLoad(req Request, res Response) error {
@@ -69,7 +69,7 @@ func (h *HTTPController) HandleWindSpeedLoad(req Request, res Response) error {
 
 	ctx := req.Context()
 
-	_, err = h.WindSpeedService.FetchAndStoreWindSpeedData(ctx, lat, lon)
+	_, err = h.WeatherService.FetchAndStoreWindSpeedData(ctx, lat, lon)
 	if err != nil {
 		res.Write(http.StatusInternalServerError, map[string]string{"error": "Failed to fetch and store wind speed data"})
 		return nil

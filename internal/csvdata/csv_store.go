@@ -4,7 +4,7 @@ import (
 	"encoding/csv"
 	"fmt"
 	"os"
-	"wind-scale-server/internal/windspeed"
+	"wind-scale-server/internal/weatherservice"
 )
 
 type CSVStore struct {
@@ -17,7 +17,7 @@ func NewCSVStore(filePath string) *CSVStore {
 	}
 }
 
-func (c *CSVStore) Create(record windspeed.WindSpeedRecord) error {
+func (c *CSVStore) Create(record weatherservice.WindSpeedRecord) error {
 	file, err := os.OpenFile(c.FilePath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
 		return err
@@ -35,14 +35,14 @@ func (c *CSVStore) Create(record windspeed.WindSpeedRecord) error {
 	return nil
 }
 
-func (c *CSVStore) Read() ([]windspeed.WindSpeedRecord, error) {
+func (c *CSVStore) Read() ([]weatherservice.WindSpeedRecord, error) {
 	panic("Read method not implemented")
 }
 
-func (c *CSVStore) Update(record windspeed.WindSpeedRecord) error {
+func (c *CSVStore) Update(record weatherservice.WindSpeedRecord) error {
 	panic("Update method not implemented")
 }
 
-func (c *CSVStore) Delete(record windspeed.WindSpeedRecord) error {
+func (c *CSVStore) Delete(record weatherservice.WindSpeedRecord) error {
 	panic("Delete method not implemented")
 }

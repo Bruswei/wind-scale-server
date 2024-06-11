@@ -1,11 +1,11 @@
-package windspeed_test
+package weatherservice_test
 
 import (
 	"context"
 	"fmt"
 	"testing"
 	"time"
-	"wind-scale-server/internal/windspeed"
+	windspeed "wind-scale-server/internal/weatherservice"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -43,7 +43,7 @@ func (m *MockDataStorer) Delete(record windspeed.WindSpeedRecord) error {
 func TestFetchAndStoreWindSpeedData(t *testing.T) {
 	mockClient := &MockClient{}
 	mockDataStorer := &MockDataStorer{}
-	windSpeedService := &windspeed.WindSpeedService{
+	windSpeedService := &windspeed.WeatherService{
 		APIClient: mockClient,
 		DataStore: mockDataStorer,
 	}
@@ -61,7 +61,7 @@ func TestFetchAndStoreWindSpeedData(t *testing.T) {
 func TestFetchAndStoreWindSpeedData_InvalidLat(t *testing.T) {
 	mockClient := &MockClient{}
 	mockDataStorer := &MockDataStorer{}
-	windSpeedService := &windspeed.WindSpeedService{
+	windSpeedService := &windspeed.WeatherService{
 		APIClient: mockClient,
 		DataStore: mockDataStorer,
 	}
@@ -78,7 +78,7 @@ func TestFetchAndStoreWindSpeedData_InvalidLat(t *testing.T) {
 func TestFetchAndStoreWindSpeedData_InvalidLong(t *testing.T) {
 	mockClient := &MockClient{}
 	mockDataStorer := &MockDataStorer{}
-	windSpeedService := &windspeed.WindSpeedService{
+	windSpeedService := &windspeed.WeatherService{
 		APIClient: mockClient,
 		DataStore: mockDataStorer,
 	}
@@ -94,7 +94,7 @@ func TestFetchAndStoreWindSpeedData_InvalidLong(t *testing.T) {
 
 func TestStoreWindSpeedData(t *testing.T) {
 	mockDataStorer := &MockDataStorer{}
-	windSpeedService := &windspeed.WindSpeedService{
+	windSpeedService := &windspeed.WeatherService{
 		DataStore: mockDataStorer,
 	}
 
