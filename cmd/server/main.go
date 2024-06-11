@@ -32,7 +32,7 @@ func initiateAndRunHTTP(port string, filePath string) {
 
 	var APIClient windspeed.Client = &met.ExternalClient{}
 	var CSVStore windspeed.DataStorer = csvdata.NewCSVStore(filePath)
-	var windSpeedService windspeed.WindSpeedGetter = &windspeed.WindSpeedService{
+	var windSpeedService windspeed.WindSpeedServiceInterface = &windspeed.WindSpeedService{
 		APIClient: APIClient,
 		DataStore: CSVStore,
 	}

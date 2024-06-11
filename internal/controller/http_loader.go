@@ -38,7 +38,7 @@ func (r *HTTPResponse) Write(statusCode int, body interface{}) error {
 }
 
 type HTTPController struct {
-	WindSpeedService windspeed.WindSpeedGetter
+	WindSpeedService windspeed.WindSpeedServiceInterface
 }
 
 func (h *HTTPController) HandleWindSpeedLoad(req Request, res Response) error {

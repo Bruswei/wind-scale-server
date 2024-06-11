@@ -13,7 +13,7 @@ type Server interface {
 
 type HTTPServer struct {
 	Port             string
-	windSpeedService windspeed.WindSpeedGetter
+	windSpeedService windspeed.WindSpeedServiceInterface
 }
 
 func (h *HTTPServer) Start() error {
@@ -35,7 +35,7 @@ func (h *HTTPServer) Start() error {
 	return http.ListenAndServe(":"+h.Port, nil)
 }
 
-func NewServer(port string, windSpeedService windspeed.WindSpeedGetter) *HTTPServer {
+func NewServer(port string, windSpeedService windspeed.WindSpeedServiceInterface) *HTTPServer {
 	return &HTTPServer{
 		Port:             port,
 		windSpeedService: windSpeedService,
