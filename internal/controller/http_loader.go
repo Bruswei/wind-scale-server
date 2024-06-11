@@ -69,15 +69,9 @@ func (h *HTTPController) HandleWindSpeedLoad(req Request, res Response) error {
 
 	ctx := req.Context()
 
-	data, err := h.WindSpeedService.FetchWindSpeedData(ctx, lat, lon)
+	_, err = h.WindSpeedService.FetchAndStoreWindSpeedData(ctx, lat, lon)
 	if err != nil {
-		res.Write(http.StatusInternalServerError, map[string]string{"error": "Failed to process data"})
-		return nil
-	}
-
-	err = h.WindSpeedService.StoreWindSpeedData(data)
-	if err != nil {
-		res.Write(http.StatusInternalServerError, map[string]string{"error": "Failed to store wind speed data"})
+		res.Write(http.StatusInternalServerError, map[string]string{"error": "Failed to fetch and store wind speed data"})
 		return nil
 	}
 
